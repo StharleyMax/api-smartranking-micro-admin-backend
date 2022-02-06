@@ -6,16 +6,16 @@ import {
   Ctx,
   RmqContext,
 } from '@nestjs/microservices';
-import { AppService } from './app.service';
-import { Category } from './interfaces/categories/category.interface';
+import { CategoriesService } from './categories.service';
+import { Category } from './interfaces/category.interface';
 
 const ackErrors = ['E11000'];
 
 @Controller()
-export class AppController {
-  constructor(private readonly appService: AppService) {}
+export class CategoriesController {
+  constructor(private readonly categoriesService: CategoriesService) {}
 
-  logger = new Logger(AppController.name);
+  logger = new Logger(CategoriesController.name);
 
   @EventPattern('create-category')
   async createCategory(
@@ -28,7 +28,7 @@ export class AppController {
     this.logger.log(`category: ${JSON.stringify(category)}`);
 
     try {
-      await this.appService.create(category);
+      await this.categoriesService.create(category);
       await channel.ack(originalMessage);
     } catch (error) {
       this.logger.error(`error: ${JSON.stringify(error.message)}`);
@@ -50,9 +50,9 @@ export class AppController {
 
     try {
       if (_id) {
-        return this.appService.findByIdCategory(_id);
+        return this.categoriesService.findByIdCategory(_id);
       } else {
-        return this.appService.findCategory();
+        return this.categoriesService.findCategory();
       }
     } finally {
       await channel.ack(originalMessage);
@@ -69,7 +69,7 @@ export class AppController {
     try {
       const { id, category } = data;
 
-      await this.appService.updateCategory(id, category);
+      await this.categoriesService.updateCategory(id, category);
       await channel.ack(originalMessage);
     } catch (error) {
       this.logger.error(`error: ${JSON.stringify(error.message)}`);
