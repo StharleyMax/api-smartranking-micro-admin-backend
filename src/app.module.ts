@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { CategoryModule } from './api/categories/categories.module';
+import { PlayersModule } from './api/players/players.module';
 
 @Module({
   imports: [
@@ -8,6 +9,7 @@ import { CategoryModule } from './api/categories/categories.module';
       'mongodb+srv://admin:admin@cluster0.za85c.mongodb.net/smartranking-admin-backend?retryWrites=true&w=majority',
     ),
     CategoryModule,
+    PlayersModule,
   ],
 })
 export class AppModule {}
